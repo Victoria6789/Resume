@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Быки и коровы</title>
+    <style>
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+      }
+      input[type="number"] {
+        width: 20pt;
+        margin-top: 2%;
+      }
+      input[type="number"]::-webkit-outer-spin-button, 
+      input[type="number"]::-webkit-inner-spin-button { 
+      -webkit-appearance: none; 
+      }
+      input[type="button"]{
+        margin-top: 2%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Игра "Быки 🐂 и коровы 🐄"</h1>
+    <div id="text">
+      Введите четыре различные цифры (0 может стоять на первом месте):
+    </div>
+    <div>
+    <div class="container">
+      <input type="number" id="number1"/>
+      <input type="number" id="number2"/>
+      <input type="number" id="number3"/>
+      <input type="number" id="number4"/>
+    </div>
+    <input type="button" value="Угадай число">
+    </br>
+    <p id="result"></p>
+  </body>
+
+  <script>
+  let numbersSet = new Set()
+  let count = 0;
+
+  function generateRandomNumber(){
+  const digits = new Set();
+
+  while (digits.size < 4) {
+    const randomDigit = Math.floor(Math.random() * 10);
+    digits.add(randomDigit);
+  }
+
+  return Array.from(digits).join("");
+}
+
+
+let randomNumber = generateRandomNumber();
+console.log(randomNumber);
+
+btn=document.querySelector(' input[type="button"]')
+btn.addEventListener('click', checkGuess)
+function checkGuess(){
+  count++;
+  let guess1 = parseInt(document.getElementById("number1").value);
+  let guess2 = parseInt(document.getElementById("number2").value);
+  let guess3 = parseInt(document.getElementById("number3").value);
+  let guess4 = parseInt(document.getElementById("number4").value);
+  const guess = guess1.toString() + guess2.toString() + guess3.toString() + guess4.toString();
+  if (guess.length !== 4 || isNaN(guess)) {
+    document.getElementById("result").textContent = "Некорректный ввод. Введите ровно 4 числа.";
+    return;
+  }
+  const guessDigits = guess.split("");
+  if (new Set(guessDigits).size !== guessDigits.length) {
+  document.getElementById("result").textContent = "Некорректный ввод. Число не должно содержать повторяющиеся цифры.";
+  return;
+ }
+
+ let bulls = 0;
+ let cows = 0;
+ for (let i = 0, j=0; i < 4 && j < 4; i++, j++){
+  if (guess[i] === randomNumber[i] && i === j){
+    bulls++;
+  }
+  else if(randomNumber[i] !== guess[i] && randomNumber.includes(guess[i])){
+    cows++;
+  }
+ }
+ 
+ 
+ const result = bulls === 4 ? "Поздравляю! Вы угадали число." : `Попытка ${count} : ${guess} Быки 🐂: ${bulls}, Коровы 🐄: ${cows}`;
+ const resultElement = document.getElementById("result");
+ resultElement.innerHTML += `<p>${result}</p>`;
+}
+  </script>
+</html>
